@@ -1,4 +1,5 @@
 let currentPokemon;
+let allPokemon = [];
 let numberOfPokemon = 24;
 
 async function loadPokemon() {
@@ -8,8 +9,9 @@ async function loadPokemon() {
         let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
         let response = await fetch(url);
         if (response.ok) {
-         currentPokemon = await response.json();
-        pokemonContainer.innerHTML += smallCardTemplate();
+            currentPokemon = await response.json();
+            allPokemon.push(currentPokemon);
+            pokemonContainer.innerHTML += smallCardTemplate();
         } else {
             console.error(`Failed to fetch data for Pokemon ${i}: ${response.statusText}`)
         }
@@ -17,6 +19,9 @@ async function loadPokemon() {
 }
 
 function smallCardTemplate() {
+    const type1 = currentPokemon.types[0].type.name;
+    const type2 = currentPokemon.types[1] ? currentPokemon.types[1].type.name : null;
+
     return /*html*/`
     <div class="small-card">
         <div class="small-card-top">
@@ -24,18 +29,13 @@ function smallCardTemplate() {
             <div>#${currentPokemon.id.toString().padStart(3, '0')}</div> 
         </div>
         <img class="small-img" src="${currentPokemon.sprites.front_shiny}" alt="${currentPokemon.name}">
+        <div class="types">
+            <div class="type">${type1}</div>
+            ${type2 ? `<div class="type">${type2}</div>` : ''}
+        </div>
     </div>
     `;
 }
-
-
-
-
-
-
-
-
-
 
 
 
