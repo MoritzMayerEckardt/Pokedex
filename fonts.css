@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('./fonts/roboto/Roboto-Black.ttf') format('truetype');
+    font-weight: normal; 
+    font-style: normal;
+  }
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./fonts/roboto/Roboto-Light.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+  @font-face {
+    font-family: 'Roboto';
+    src: url('./fonts/roboto/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold; 
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MeineSchriftart';
+    src: url('./fonts/roboto/Roboto-BlackItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
