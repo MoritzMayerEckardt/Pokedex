@@ -72,7 +72,7 @@ function prepareTypesAndColors() {
 function createSmallCardTemplate(i) {
     let { type1, type2, color1, color2 } = prepareTypesAndColors();
     return /*html*/`
-        <div onclick="openPopup()" class="small-card" style="background-color: ${color1};">
+        <div onclick="openPopup(${i})" class="small-card" style="background-color: ${color1};">
             <div class="small-card-top">
                 <h2>${currentPokemon.name.charAt(0).toUpperCase() + currentPokemon.name.slice(1)}</h2> 
                 <div>#${currentPokemon.id.toString().padStart(3, '0')}</div> 
@@ -87,23 +87,47 @@ function createSmallCardTemplate(i) {
     `;
 }
 
-function openPopup() {
+function openPopup(i) {
     let popup = document.getElementById('popup');
+    let selectedPokemon = allPokemon[i-1];
     popup.classList.remove('d-none');
+    renderDetailedCard(i, selectedPokemon);
+    renderPokemonInfo(selectedPokemon);
 }
 
-
-
-
-
-
-function renderPokemonInfo() {
-    document.getElementById('pokemon-name').innerHTML = currentPokemon['name'];
-    document.getElementById('pokemon-img').src = currentPokemon['sprites']['front_shiny'];
-    document.getElementById('pokemon-id').innerHTML += `#${currentPokemon['id'].toString().padStart(3, '0')}`;
-    document.getElementById('pokemon-height').innerHTML += `<b>${currentPokemon['height']}</b>`;
-    document.getElementById('pokemon-weight').innerHTML += `<b>${currentPokemon['weight']}</b>`;
+function renderDetailedCard(i, selectedPokemon) {
+    let card = document.getElementById('card');
+    card.innerHTML = /*html*/`
+        <div class="card">
+            <div class="pokedex-top">
+                <div class="pokemon-headline">
+                    <h1 id="pokemon-name"></h1>
+                    <div id="pokemon-id"></div>
+                </div>
+                <img id="pokemon-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${i}.png" alt="">
+            </div>
+            <div class="info">
+                <div class="height-and-weight">
+                    <div class="height"><span class="color">Height</span><div id="pokemon-height"></div></div>
+                    <div class="weight"><span class="color">Weight</span><div id="pokemon-weight"></div></div>
+                </div>
+                <div class="moves-and-index">
+                    <ul id="pokemon-moves">Moves:</ul>
+                    <ul id="pokemon-index">Index:</ul>
+                </div>
+            </div>
+        </div>
+    `;
+    renderPokemonInfo(selectedPokemon);
 }
+
+function renderPokemonInfo(selectedPokemon) {
+    document.getElementById('pokemon-name').innerHTML = selectedPokemon['name'];
+    document.getElementById('pokemon-id').innerHTML += `#${selectedPokemon['id'].toString().padStart(3, '0')}`;
+    document.getElementById('pokemon-height').innerHTML += `<b>${selectedPokemon['height']}</b>`;
+    document.getElementById('pokemon-weight').innerHTML += `<b>${selectedPokemon['weight']}</b>`;
+}
+
 
 function renderMoves() {
     let pokemonMoves = document.getElementById('pokemon-moves')
