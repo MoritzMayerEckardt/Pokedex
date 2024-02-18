@@ -5,11 +5,10 @@ body {
 }
 
 header {
-    height: 400px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
 }
 
 h1 {
@@ -25,16 +24,22 @@ h2 {
 
 .header-img {
     object-fit: fill;
-    height: 240px;
+    height: 120px;
 }
 
 #pokemon-container {
+    min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 32px;
     gap: 32px;
-    background-image: url('./img/pokeball.png');
+    background-image: url(./img/pokeball.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 33%;
+    align-items: flex-start;
 }
 
 .small-card {
@@ -119,6 +124,7 @@ h2 {
     box-sizing: border-box;
     color: white;
     border-radius: 32px;
+    position: relative;
 }
 
 .pokemon-headline {
@@ -180,6 +186,9 @@ h2 {
     justify-content: flex-start;
     gap: 32px;
     padding-top: 32px;
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
 }
 
 .type-detailed-card {
@@ -260,16 +269,76 @@ h2 {
 
 .close-button {
     position: absolute;
-    bottom: 32px;
-    right: 32px;
+    top: -32px;
+    right: -32px;
+    font-size: 28px;
+}
+
+.close-button:hover {
+    cursor: pointer;
+}
+
+.increase-font-size {
     font-size: 24px;
 }
 
+.category:hover {
+    cursor: pointer;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.image {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+}
+  
+.next-previous {
+    font-size: 32px;
+}
+
+.next-previous:hover {
+    cursor: pointer;
+}
+
+.load-img {
+    height: 48px;
+    width: auto;
+    transition: transform 0.5s ease;
+}
+  
+.load-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 8px;
+    width: 240px;
+    height: 48px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid black;
+    border-radius: 16px;
+}
+
+.load-container:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+#load-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
-  
-  
-  
-  
   
   

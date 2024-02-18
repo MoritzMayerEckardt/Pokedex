@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex</title>
+    <script src="templates.js"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fonts.css">
 </head>
-<body onload="loadPokemon()">
+<body id="mybody" onload="loadPokemon()">
     <header>
-        <h1>Pokédex</h1>
         <img class="header-img" src="./img/pokeball.png" alt="">
+        <div>
+            <h1>Pokédex</h1>
+            <input type="text" id="search" placeholder="Pokemon suchen..." onkeydown="searchPokemon()">
+            <button onclick="clearSearch()">Clear search</button>
+        </div>
     </header>
     <section id="pokemon-container"></section>
+    <section id="load-container">
+        <b onclick="loadMorePokemon()" class="load-container" style="color: black"><img class="load-img" id="rotating-image" src="./img/pokeball_load.png">Load more Pokemon...</b>
+    </section>
     <section id="popup" class="d-none"></section>
 </body>
 </html>

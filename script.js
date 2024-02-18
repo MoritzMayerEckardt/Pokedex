@@ -1,21 +1,33 @@
 let currentPokemon;
 let allPokemon = [];
-let numberOfPokemon = 42;
+let currentNumberOfPokemon = 0;
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (event) {
+        let card = document.getElementById('card');
+        if (card.contains(event.target)) {
+        } else {
+            closePopup();
+        }
+    });
+});
 
 async function loadPokemon() {
     let pokemonContainer = document.getElementById('pokemon-container');
-    pokemonContainer.innerHTML = '';
-    for (let i = 1; i <= numberOfPokemon; i++) {
+    let startIndex = currentNumberOfPokemon + 1;
+    let endIndex = currentNumberOfPokemon + 42;
+    for (let i = startIndex; i <= endIndex; i++) {
         let url = `https://pokeapi.co/api/v2/pokemon/${i}`;
         let response = await fetch(url);
         if (response.ok) {
             currentPokemon = await response.json();
             allPokemon.push(currentPokemon);
-            pokemonContainer.innerHTML += createSmallCardTemplate(i);
+            pokemonContainer.innerHTML += createSmallCardTemplate(currentPokemon);
         } else {
             console.error(`Failed to fetch data for Pokemon ${i}: ${response.statusText}`)
         }
     }
+    currentNumberOfPokemon = endIndex;
 }
 
 function getBackgroundColor(type) {
@@ -61,37 +73,35 @@ function getBackgroundColor(type) {
     }
 }
 
-function prepareTypesAndColors() {
-    let type1 = currentPokemon.types['0'].type.name;
-    let type2 = currentPokemon.types['1'] ? currentPokemon.types['1'].type.name : null;
+function prepareTypesAndColors(pokemon) {
+    let type1 = pokemon.types['0'].type.name;
+    let type2 = pokemon.types['1'] ? pokemon.types['1'].type.name : null;
     let color1 = getBackgroundColor(type1);
     let color2 = type2 ? getBackgroundColor(type2) : null;
-    return {type1, type2, color1, color2}
+    return {type1, type2, color1, color2};
 }
 
-function createSmallCardTemplate(i) {
-    let { type1, type2, color1, color2 } = prepareTypesAndColors();
-    return /*html*/`
-        <div onclick="openPopup(${i-1})" class="small-card" style="background-color: ${color1};">
-            <div class="small-card-top">
-                <h2>${currentPokemon.name.charAt(0).toUpperCase() + currentPokemon.name.slice(1)}</h2> 
-                <div>#${currentPokemon.id.toString().padStart(3, '0')}</div> 
-            </div>
-            <div class="types">
-                <div class="type" style="background-color: ${color1};">${type1}</div>
-                ${type2 ? `<div class="type" style="background-color: ${color2};">${type2}</div>` : ''}
-            </div>
-            <img class="small-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${i}.png" alt="${currentPokemon.name}">
-            <div class="small-card-bottom"></div>
-        </div>
-    `;
-}
-
-function openPopup(i) {
-    let popup = document.getElementById('popup');
+function openPopup(i, event) {
     let selectedPokemon = allPokemon[i];
+    let card = document.getElementById('popup');
+    removeDisplayNoneFromPopup();
+    renderDetailedCard(i, selectedPokemon, card);
+    increaseFontSizeAbout();
+    avoidScolling();
+    event.stopPropagation();
+}
+
+function removeDisplayNoneFromPopup() {
+    let popup = document.getElementById('popup');
     popup.classList.remove('d-none');
-    renderDetailedCard(i, selectedPokemon);
+}
+
+function avoidScolling() {
+    document.getElementById('mybody').classList.add('overflow-hidden');
+}
+
+function increaseFontSizeAbout() {
+    document.getElementById('font-about').classList.add('increase-font-size');
 }
 
 function getBackGroundColorAndTypesCard(selectedPokemon) {
@@ -102,119 +112,109 @@ function getBackGroundColorAndTypesCard(selectedPokemon) {
     return {color1, color2, type1, type2}
 }
 
-function renderDetailedCard(i, selectedPokemon) {
-    let {color1, color2, type1, type2} = getBackGroundColorAndTypesCard(selectedPokemon);
-    let card = document.getElementById('popup');
-    card.innerHTML = /*html*/`
-        <div id="card">
-                <div class="pokemon-headline" style="color: ${color1}">
-                    <h2 id="pokemon-name">${selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}</h2>
-                    <div id="pokemon-id">#${selectedPokemon.id.toString().padStart(3, '0')}</div>
-                </div>
-                <img id="pokemon-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${i+1}.png" alt="">
-            <div class="info" style="background-color: ${color1}">
-                <div class="about-stats-moves">
-                    <b onclick="showAbout(${i})" class="category">About</b>
-                    <b onclick="showStats(${i})" class="category">Stats</b>
-                    <b onclick="showMoves(${i})" class="category">Moves</b>
-                </div>
-                <div id="about" class="about">
-                    <div class="skill">
-                        <span>Base Experience</span>
-                        <div><b>${selectedPokemon.base_experience}</b></div>
-                    </div>
-                    <div class="skill">
-                        <span>Height</span>
-                        <div><b>${selectedPokemon.height}</b></div>
-                    </div>
-                    <div class="skill">
-                        <span>Weight</span>
-                        <div><b>${selectedPokemon.weight}</b></div>
-                    </div>
-                    <div class="skill">
-                        <span>Abilities</span>
-                        <div class="abilities">
-                            <b>${selectedPokemon.abilities['0'].ability.name}</b>
-                            ${selectedPokemon.abilities.length > 1 ? `<b>${selectedPokemon.abilities['1'].ability.name}</b>` : ''}
-                        </div>
-                    </div>
-                    <div class="types-detailed-card">
-                    <b class="type-detailed-card" style="background-color: ${color1}">${type1}</b>   
-                    ${selectedPokemon.types.length > 1 ? `<b class="type-detailed-card" style="background-color: ${color2}">${type2}</b>` : ''}
-                    </div>
-                    <div class="close-button" onclick="closePopup()">x</div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 function closePopup() {
     let popup = document.getElementById('popup');
     popup.classList.add('d-none');
+    document.getElementById('mybody').classList.remove('overflow-hidden');
 }
 
 function showMoves(i) {
     let movesContainer = document.getElementById('about');
+    let moves =  allPokemon[i].moves;
+    increaseFontSizeMoves();
+    changeToMovesContainer(movesContainer);
+    renderMoves(moves, movesContainer);
+}
+
+function increaseFontSizeMoves() {
+    document.getElementById('stats').classList.remove('increase-font-size');
+    document.getElementById('font-about').classList.remove('increase-font-size');
+    document.getElementById('moves').classList.add('increase-font-size');
+}
+
+function changeToMovesContainer(movesContainer) {
     movesContainer.innerHTML = '';
     movesContainer.classList.remove('about');
     movesContainer.classList.remove('stats');
     movesContainer.classList.add('moves');
-    let moves =  allPokemon[i].moves;
-    for (let i = 0; i < moves.length; i++) {
-        const move = moves[i].move; 
-        movesContainer.innerHTML += `<b class="move">${move.name}</b>`;
-    }
 }
 
-function showAbout(i) {
+function showAbout(i, event) {
     let aboutContainer = document.getElementById('about');
+    changeToAboutContainer(aboutContainer);
+    event.stopPropagation();
+    openPopup(i, event);
+}
+
+function changeToAboutContainer(aboutContainer) {
     aboutContainer.innerHTML = '';
     aboutContainer.classList.remove('moves');
     aboutContainer.classList.remove('stats');
     aboutContainer.classList.add('about');
-    openPopup(i);
 }
 
 function showStats(i) {
     let statsContainer = document.getElementById('about');
+    let stats = allPokemon[i].stats;
+    increaseFontSizeStats();
+    changeToStatsContainer(statsContainer, stats);
+}
+
+function increaseFontSizeStats() {
+    document.getElementById('stats').classList.add('increase-font-size');
+    document.getElementById('moves').classList.remove('increase-font-size');
+    document.getElementById('font-about').classList.remove('increase-font-size');
+}
+
+function changeToStatsContainer(statsContainer, stats) {
     statsContainer.innerHTML = '';
     statsContainer.classList.remove('moves');
     statsContainer.classList.remove('about');
     statsContainer.classList.add('stats');
-    statsContainer.innerHTML = renderStats(i, statsContainer);
-    let stats = allPokemon[i].stats;
+    statsContainer.innerHTML = renderStats(stats);
 }
 
-function renderStats(i, statsContainer) {
-    let stats = allPokemon[i].stats;
-    return statsContainer.innerHTML += /*html*/`
-    <div class="stats-name">
-        <span>${stats[0].stat.name}</span>
-        <span>${stats[1].stat.name}</span>
-        <span>${stats[2].stat.name}</span>
-        <span>${stats[3].stat.name}</span>
-        <span>${stats[4].stat.name}</span>
-        <span>${stats[5].stat.name}</span>
-    </div>
-    <div class="stats-chart">
-        <div class="bar" style="width: ${stats[0].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[1].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[2].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[3].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[4].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[5].base_stat}px;"></div>
-    </div>
-    <div class="stats-value">
-        <b>${stats[0].base_stat}</b>
-        <b>${stats[1].base_stat}</b>
-        <b>${stats[2].base_stat}</b>
-        <b>${stats[3].base_stat}</b>
-        <b>${stats[4].base_stat}</b>
-        <b>${stats[5].base_stat}</b>
-    </div>
-`;
+function showNextPokemon(i, event) {
+    let numberOfPokemon = allPokemon.length;
+    let nextPokemonIndex = (i + 1) % numberOfPokemon;
+    let nextPokemon = allPokemon[nextPokemonIndex]
+    renderDetailedCard(nextPokemonIndex, nextPokemon);
+    increaseFontSizeAbout();
+    event.stopPropagation();
 }
+
+function showPreviousPokemon(i, event) {
+    let numberOfPokemon = allPokemon.length;
+    let previousPokemonIndex = (i - 1 + numberOfPokemon) % numberOfPokemon;
+    let previousPokemon = allPokemon[previousPokemonIndex];
+    renderDetailedCard(previousPokemonIndex, previousPokemon);
+    increaseFontSizeAbout();
+    event.stopPropagation();
+}
+
+function searchPokemon() {
+    let search = document.getElementById('search').value.toLowerCase();
+    let pokemonContainer = document.getElementById('pokemon-container');
+    pokemonContainer.innerHTML = '';
+    for (let index = 0; index < allPokemon.length; index++) {
+        let name = allPokemon[index].forms[0].name.toLowerCase();
+        if (name.toLowerCase().includes(search) || search === "") {
+            pokemonContainer.innerHTML += createSmallCardTemplate(allPokemon[index]);
+        }
+    }
+}
+
+async function loadMorePokemon() {
+    await loadPokemon();
+}
+
+function clearSearch() {
+    document.getElementById('search').value = ''; 
+    searchPokemon();
+}
+
+
+
 
 
 
