@@ -4,7 +4,7 @@ function createSmallCardTemplate(currentPokemon, type1, type2, color1, color2) {
         <div onclick="openPopup(${currentPokemon.id - 1}, event)" class="small-card" style="background-color: ${color1};">
             <div class="small-card-top">
                 <h2>${currentPokemon.name.charAt(0).toUpperCase() + currentPokemon.name.slice(1)}</h2> 
-                <div>#${currentPokemon.id.toString().padStart(3, '0')}</div> 
+                <div>#${currentPokemon.id.toString().padStart(4, '0')}</div> 
             </div>
             <div class="types">
                 <div class="type" style="background-color: ${color1};">${type1}</div>
@@ -21,7 +21,7 @@ function renderDetailedCard(i, selectedPokemon, color1, color2, type1, type2) {
         <div id="card">
                 <div class="pokemon-headline" style="color: ${color1}">
                     <h2 id="pokemon-name">${selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}</h2>
-                    <div id="pokemon-id">#${selectedPokemon.id.toString().padStart(3, '0')}</div>
+                    <div id="pokemon-id">#${selectedPokemon.id.toString().padStart(4, '0')}</div>
                 </div>
                 <div class="image">
                     <b class="close-button" style="color:${color1}" onclick="closePopup()">x</b>
@@ -66,13 +66,6 @@ function renderDetailedCard(i, selectedPokemon, color1, color2, type1, type2) {
     `;
 }
 
-function renderMoves(moves, movesContainer) {
-    for (let i = 0; i < moves.length; i++) {
-        const move = moves[i].move; 
-        movesContainer.innerHTML += `<b class="move">${move.name}</b>`;
-    }
-}
-
 function renderStats(stats) {
     return /*html*/`
     <div class="stats-name">
@@ -100,4 +93,10 @@ function renderStats(stats) {
         <b>${stats[5].base_stat}</b>
     </div>
 `;
+}
+
+function renderLoadingScreen() {
+    return /*html*/`
+        <div>Loading...</div>
+    `
 }
