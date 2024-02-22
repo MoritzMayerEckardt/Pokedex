@@ -1,26 +1,23 @@
 
-function createSmallCardTemplate(pokemon) {
-    let { type1, type2, color1, color2 } = prepareTypesAndColors(pokemon);
+function createSmallCardTemplate(currentPokemon, type1, type2, color1, color2) {
     return /*html*/`
-        <div onclick="openPopup(${pokemon.id - 1}, event)" class="small-card" style="background-color: ${color1};">
+        <div onclick="openPopup(${currentPokemon.id - 1}, event)" class="small-card" style="background-color: ${color1};">
             <div class="small-card-top">
-                <h2>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h2> 
-                <div>#${pokemon.id.toString().padStart(3, '0')}</div> 
+                <h2>${currentPokemon.name.charAt(0).toUpperCase() + currentPokemon.name.slice(1)}</h2> 
+                <div>#${currentPokemon.id.toString().padStart(3, '0')}</div> 
             </div>
             <div class="types">
                 <div class="type" style="background-color: ${color1};">${type1}</div>
                 ${type2 ? `<div class="type" style="background-color: ${color2};">${type2}</div>` : ''}
             </div>
-            <img class="small-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png" alt="${pokemon.name}">
+            <img class="small-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${currentPokemon.id}.png" alt="${currentPokemon.name}">
             <div class="small-card-bottom"></div>
         </div>
     `;
 }
 
-function renderDetailedCard(i, selectedPokemon) {
-    let {color1, color2, type1, type2} = getBackGroundColorAndTypesCard(selectedPokemon);
-    let card = document.getElementById('popup');
-    card.innerHTML = /*html*/`
+function renderDetailedCard(i, selectedPokemon, color1, color2, type1, type2) {
+    return /*html*/`
         <div id="card">
                 <div class="pokemon-headline" style="color: ${color1}">
                     <h2 id="pokemon-name">${selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}</h2>
@@ -87,12 +84,12 @@ function renderStats(stats) {
         <span>${stats[5].stat.name}</span>
     </div>
     <div class="stats-chart">
-        <div class="bar" style="width: ${stats[0].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[1].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[2].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[3].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[4].base_stat}px;"></div>
-        <div class="bar" style="width: ${stats[5].base_stat}px;"></div>
+        <div class="bar" style="width: ${stats[0].base_stat*0.5}px;"></div>
+        <div class="bar" style="width: ${stats[1].base_stat*0.5}px;"></div>
+        <div class="bar" style="width: ${stats[2].base_stat*0.5}px;"></div>
+        <div class="bar" style="width: ${stats[3].base_stat*0.5}px;"></div>
+        <div class="bar" style="width: ${stats[4].base_stat*0.5}px;"></div>
+        <div class="bar" style="width: ${stats[5].base_stat*0.5}px;"></div>
     </div>
     <div class="stats-value">
         <b>${stats[0].base_stat}</b>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="./img/pokeball_load.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex</title>
@@ -9,18 +10,20 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fonts.css">
 </head>
-<body id="mybody" onload="loadPokemon()">
-    <header>
+<body id="mybody" onload="init()">
+    <header id="header">
         <img class="header-img" src="./img/pokeball.png" alt="">
         <div>
             <h1>Pokédex</h1>
-            <input type="text" id="search" placeholder="Pokemon suchen..." onkeydown="searchPokemon()">
-            <button onclick="clearSearch()">Clear search</button>
         </div>
     </header>
+    <section class="search-container">
+        <input type="text" id="search" placeholder="Find your pokemon..." onkeyup="searchPokemon()">
+        <button class="search-button" onclick="clearSearch()">Clear search</button>
+    </section>
     <section id="pokemon-container"></section>
     <section id="load-container">
-        <b onclick="loadMorePokemon()" class="load-container" style="color: black"><img class="load-img" id="rotating-image" src="./img/pokeball_load.png">Load more Pokemon...</b>
+        <b onclick="loadMorePokemon()" class="load-container" style="color: black"><img class="load-img" id="bottom" src="./img/pokeball_load.png">Click here to load more Pokemon...</b>
     </section>
     <section id="popup" class="d-none"></section>
 </body>
